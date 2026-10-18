@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qr Grandstream by CLG - Cloud Dashboard</title>
+    <link rel="icon" type="image/x-icon" href="icon.ico">
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --th-bg: #f8fafc;
+            --tr-hover: #f1f5f9;
+            --mac-bg: #eff6ff;
+            --mac-color: #1d4ed8;
+            --mac-border: #bfdbfe;
+            --sn-bg: #f8fafc;
+            --sn-color: #334155;
+            --sn-border: #cbd5e1;
+            --badge-bg: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --alert-bg: #fef2f2;
+            --alert-color: #991b1b;
+            --alert-border: #fecaca;
+            --accent-btn: #2563eb;
+            --accent-btn-hover: #1d4ed8;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0b1120;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --th-bg: #192231;
+            --tr-hover: #263345;
+            --mac-bg: #1e3a8a;
+            --mac-color: #93c5fd;
+            --mac-border: #3b82f6;
+            --sn-bg: #1e293b;
+            --sn-color: #cbd5e1;
+            --sn-border: #475569;
+            --badge-bg: linear-gradient(135deg, #059669 0%, #047857 100%);
+            --alert-bg: #450a0a;
+            --alert-color: #fca5a5;
+            --alert-border: #7f1d1d;
+            --accent-btn: #3b82f6;
+            --accent-btn-hover: #2563eb;
+        }
+
+        * {
+            box-sizing: border-box;
+            transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 30px 20px;
+        }
+
+        .dashboard-container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* Top Navbar */
+        .navbar-card {
+            background: var(--card-bg);
+            padding: 18px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .brand-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border: 2px solid white;
+            background: #fff;
+        }
+
+        .brand-info h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 0 0 4px 0;
+            letter-spacing: -0.3px;
+        }
+
+        .brand-info p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .stats-badge {
+            background: var(--badge-bg);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: var(--text-main);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+
+        .btn-action:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        .btn-primary {
+            background: var(--accent-btn);
+            color: #ffffff;
+            border-color: var(--accent-btn);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-btn-hover);
+        }
+
+        .btn-sheets {
+            background: #0f9d58;
+            color: #ffffff;
+            border-color: #0f9d58;
+        }
+
+        .btn-sheets:hover {
+            background: #0b8043;
+        }
+
+        .theme-toggle-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            background: var(--th-bg);
+            color: var(--text-main);
+        }
+
+        /* Status & Alert Banner */
+        #alert-box {
+            background: var(--alert-bg);
+            color: var(--alert-color);
+            border: 1px solid var(--alert-border);
+            padding: 14px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+            font-weight: 500;
+            font-size: 14px;
+            animation: slideDown 0.3s ease;
+        }
+
+        .setup-guide-box {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        [data-theme="dark"] .setup-guide-box {
+            background: #172554;
+            border-color: #1e40af;
+            color: #bfdbfe;
+        }
+
+        /* Controls bar */
+        .controls-card {
+            background: var(--card-bg);
+            padding: 14px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .search-input-wrap {
+            position: relative;
+            flex: 1;
+            max-width: 380px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 9px 14px 9px 36px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-main);
+            font-size: 13px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-btn);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .sync-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #10b981;
+            display: inline-block;
+        }
+
+        .status-dot.syncing {
+            background-color: #f59e0b;
+            animation: pulse 1s infinite;
+        }
+
+        .status-dot.error {
+            background-color: #ef4444;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.9); opacity: 0.6; }
+            50% { transform: scale(1.3); opacity: 1; }
+            100% { transform: scale(0.9); opacity: 0.6; }
+        }
+
+        /* Table Design */
+        .table-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--th-bg);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 13.5px;
+            color: var(--text-main);
+            vertical-align: middle;
+        }
+
+        tr:hover {
+            background-color: var(--tr-hover);
+        }
+
+        .mac-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: var(--mac-color);
+            background: var(--mac-bg);
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid var(--mac-border);
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+
+        .sn-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            color: var(--sn-color);
+            background: var(--sn-bg);
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid var(--sn-border);
+            display: inline-block;
+        }
+
+        .pass-text {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-main);
+            background: rgba(148, 163, 184, 0.15);
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .status-ok {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        /* Modal Settings */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+
+        .modal-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 550px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: modalPop 0.25s ease;
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-main);
+            font-size: 13.5px;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-btn);
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Top Navbar -->
+        <div class="navbar-card">
+            <div class="brand-section">
+                <img src="logo.png" onerror="this.onerror=null; this.src='LogoCLG .png';" alt="CLG Logo" class="brand-logo">
+                <div class="brand-info">
+                    <h1>Qr Grandstream by CLG</h1>
+                    <p>
+                        <span>Cloud Inventory Dashboard</span>
+                        <span>•</span>
+                        <span id="conn-status" style="color: #10b981;">Đang kết nối</span>
+                    </p>
+                </div>
+            </div>
+            <div class="nav-actions">
+                <div class="stats-badge">
+                    <span>Tổng thiết bị:</span>
+                    <span id="total-count" style="font-size: 16px; font-weight: 700;">0</span>
+                </div>
+                <a href="#" id="openSheetBtn" target="_blank" class="btn-action btn-sheets" title="Mở bảng tính Google Sheets">
+                    📊 Mở Google Sheet
+                </a>
+                <button class="btn-action" onclick="openConfigModal()" title="Cài đặt URL kết nối Google Apps Script">
+                    ⚙️ Cấu hình
+                </button>
+                <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Chuyển chế độ Sáng/Tối">
+                    🌙
+                </button>
+            </div>
+        </div>
+
+        <!-- Hướng dẫn nếu chưa cài URL -->
+        <div id="unconfigured-banner" class="setup-guide-box" style="display: none;">
+            <div>
+                <strong>🚀 Chưa cấu hình URL Web App Google Sheets!</strong>
+                <div style="font-size: 13px; margin-top: 3px;">
+                    Hãy dán link Web App từ Google Apps Script để kết nối bảng tính với Dashboard GitHub Pages này.
+                </div>
+            </div>
+            <button class="btn-action btn-primary" onclick="openConfigModal()">Cấu hình ngay</button>
+        </div>
+
+        <!-- Cảnh báo trùng lặp MAC -->
+        <div id="alert-box">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div id="alert-content"></div>
+                <button onclick="dismissDuplicateAlert()" class="btn-action" style="padding: 4px 10px; font-size: 12px;">Đã hiểu</button>
+            </div>
+        </div>
+
+        <!-- Controls: Search & Refresh -->
+        <div class="controls-card">
+            <div class="search-input-wrap">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" class="search-input" placeholder="Tìm kiếm nhanh theo MAC, Serial Number, Password..." oninput="handleSearch()">
+            </div>
+            <div class="sync-info">
+                <span id="sync-dot" class="status-dot"></span>
+                <span id="sync-text">Cập nhật tự động mỗi 3 giây</span>
+                <button class="btn-action" onclick="fetchData(true)" style="padding: 5px 12px; font-size: 12px;">
+                    🔄 Làm mới
+                </button>
+            </div>
+        </div>
+
+        <!-- Bảng hiển thị danh sách thiết bị -->
+        <div class="table-card">
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 70px;">STT</th>
+                            <th>MAC Address</th>
+                            <th>Serial Number</th>
+                            <th>Password</th>
+                            <th>Thời Gian Quét</th>
+                            <th style="width: 170px;">Trạng Thái</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                <div>⏳ Đang tải dữ liệu từ Google Sheets...</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Cấu hình Google Apps Script & Sheet -->
+    <div class="modal-overlay" id="configModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title">⚙️ Cấu hình Kết Nối Google Sheets</h3>
+                <button class="modal-close" onclick="closeConfigModal()">✕</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Google Apps Script Web App URL (Bắt buộc):</label>
+                <input type="text" id="cfgScriptUrl" class="form-input" placeholder="https://script.google.com/macros/s/.../exec">
+                <div class="help-text">Link Web App nhận được sau khi chọn <b>Deploy &gt; New deployment &gt; Who has access: Anyone</b>.</div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Đường dẫn Google Sheet (Tùy chọn):</label>
+                <input type="text" id="cfgSheetUrl" class="form-input" placeholder="https://docs.google.com/spreadsheets/d/.../edit">
+                <div class="help-text">Dán link Google Sheet để bấm nút "📊 Mở Google Sheet" nhanh chóng.</div>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+                <button class="btn-action" onclick="closeConfigModal()">Hủy</button>
+                <button class="btn-action btn-primary" onclick="saveConfig()">Lưu Cấu Hình</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cấu hình mặc định (người dùng có thể sửa qua Modal)
+        const STORAGE_KEY_URL = 'clg_grandstream_script_url';
+        const STORAGE_KEY_SHEET = 'clg_grandstream_sheet_url';
+        
+        let SCRIPT_URL = localStorage.getItem(STORAGE_KEY_URL) || '';
+        let SHEET_URL = localStorage.getItem(STORAGE_KEY_SHEET) || '';
+        let allItems = [];
+        let isFetching = false;
+
+        // Xử lý Theme Sáng / Tối
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            let btn = document.getElementById('themeToggleBtn');
+            btn.innerHTML = (theme === 'dark') ? '☀️' : '🌙';
+        }
+
+        function toggleTheme() {
+            let current = document.documentElement.getAttribute('data-theme');
+            setTheme(current === 'dark' ? 'light' : 'dark');
+        }
+
+        (function initTheme() {
+            let saved = localStorage.getItem('theme') || 'light';
+            setTheme(saved);
+        })();
+
+        // Cập nhật nút Mở Google Sheet
+        function updateSheetLink(url) {
+            let btn = document.getElementById('openSheetBtn');
+            if (url) {
+                btn.href = url;
+                btn.style.display = 'inline-flex';
+            } else {
+                btn.style.display = 'none';
+            }
+        }
+
+        // Modal Cấu hình
+        function openConfigModal() {
+            document.getElementById('cfgScriptUrl').value = SCRIPT_URL;
+            document.getElementById('cfgSheetUrl').value = SHEET_URL;
+            document.getElementById('configModal').style.display = 'flex';
+        }
+
+        function closeConfigModal() {
+            document.getElementById('configModal').style.display = 'none';
+        }
+
+        function saveConfig() {
+            let scriptUrlInput = document.getElementById('cfgScriptUrl').value.trim();
+            let sheetUrlInput = document.getElementById('cfgSheetUrl').value.trim();
+
+            SCRIPT_URL = scriptUrlInput;
+            SHEET_URL = sheetUrlInput;
+
+            localStorage.setItem(STORAGE_KEY_URL, SCRIPT_URL);
+            localStorage.setItem(STORAGE_KEY_SHEET, SHEET_URL);
+
+            updateSheetLink(SHEET_URL);
+            closeConfigModal();
+            checkConfigState();
+            fetchData(true);
+        }
+
+        function checkConfigState() {
+            let banner = document.getElementById('unconfigured-banner');
+            let connStatus = document.getElementById('conn-status');
+            if (!SCRIPT_URL) {
+                banner.style.display = 'flex';
+                connStatus.innerText = 'Chưa cấu hình URL';
+                connStatus.style.color = '#f59e0b';
+            } else {
+                banner.style.display = 'none';
+                connStatus.innerText = 'Đang đồng bộ Google Sheets';
+                connStatus.style.color = '#10b981';
+            }
+        }
+
+        // Tải dữ liệu từ Google Apps Script
+        async function fetchData(forceManual = false) {
+            if (!SCRIPT_URL) {
+                renderEmptyState("Vui lòng cấu hình Web App URL để kết nối với Google Sheet.");
+                return;
+            }
+
+            if (isFetching && !forceManual) return;
+            isFetching = true;
+
+            let dot = document.getElementById('sync-dot');
+            dot.className = 'status-dot syncing';
+
+            try {
+                // Fetch với redirect: follow cho Google Apps Script
+                let response = await fetch(SCRIPT_URL, {
+                    method: 'GET',
+                    redirect: 'follow'
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                let data = await response.json();
+                dot.className = 'status-dot';
+                
+                if (data.sheet_url && !SHEET_URL) {
+                    SHEET_URL = data.sheet_url;
+                    localStorage.setItem(STORAGE_KEY_SHEET, SHEET_URL);
+                    updateSheetLink(SHEET_URL);
+                }
+
+                // Cập nhật tổng số thiết bị
+                document.getElementById('total-count').innerText = data.total || 0;
+
+                // Xử lý cảnh báo trùng lặp
+                let alertBox = document.getElementById('alert-box');
+                let alertContent = document.getElementById('alert-content');
+                if (data.duplicates && data.duplicates.length > 0) {
+                    let latest = data.duplicates[0];
+                    alertContent.innerHTML = `⚠️ <strong>CẢNH BÁO TRÙNG LẶP:</strong> Thiết bị MAC <span class="mac-text">${latest.mac}</span> đã có trong Google Sheet! (Thời gian quét: ${latest.time})`;
+                    alertBox.style.display = 'block';
+                } else {
+                    alertBox.style.display = 'none';
+                }
+
+                allItems = data.items || [];
+                renderTable(allItems);
+
+            } catch (err) {
+                dot.className = 'status-dot error';
+                console.error("Lỗi đồng bộ:", err);
+                document.getElementById('conn-status').innerText = 'Lỗi kết nối';
+                document.getElementById('conn-status').style.color = '#ef4444';
+            } finally {
+                isFetching = false;
+            }
+        }
+
+        function renderTable(items) {
+            let tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+
+            let filterText = document.getElementById('searchInput').value.trim().toLowerCase();
+            let filtered = items;
+            if (filterText) {
+                filtered = items.filter(row => 
+                    String(row[1] || '').toLowerCase().includes(filterText) ||
+                    String(row[2] || '').toLowerCase().includes(filterText) ||
+                    String(row[3] || '').toLowerCase().includes(filterText)
+                );
+            }
+
+            if (filtered.length === 0) {
+                renderEmptyState(filterText ? 'Không tìm thấy thiết bị phù hợp với từ khóa.' : 'Chưa có dữ liệu thiết bị nào trong Google Sheet.');
+                return;
+            }
+
+            filtered.forEach(row => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-weight: 600; color: var(--text-muted);">${row[0]}</td>
+                    <td><span class="mac-text">${row[1]}</span></td>
+                    <td><span class="sn-text">${row[2]}</span></td>
+                    <td><span class="pass-text">${row[3]}</span></td>
+                    <td style="color: var(--text-muted); font-size: 13px;">${row[4]}</td>
+                    <td><span class="status-pill status-ok">✓ Đã lưu Google Sheet</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function renderEmptyState(message) {
+            let tbody = document.getElementById('table-body');
+            tbody.innerHTML = `<tr><td colspan="6" class="empty-state"><div>${message}</div></td></tr>`;
+        }
+
+        function handleSearch() {
+            renderTable(allItems);
+        }
+
+        async function dismissDuplicateAlert() {
+            document.getElementById('alert-box').style.display = 'none';
+            if (SCRIPT_URL) {
+                try {
+                    await fetch(`${SCRIPT_URL}?action=clear_duplicates`, { method: 'GET', redirect: 'follow' });
+                } catch(e) {}
+            }
+        }
+
+        async function triggerTestScan() {
+            if (!SCRIPT_URL) {
+                alert("Vui lòng cấu hình Web App URL trước khi chạy test!");
+                openConfigModal();
+                return;
+            }
+            try {
+                let btn = event.target;
+                let originalText = btn.innerHTML;
+                btn.innerHTML = "⏳ Đang gửi...";
+                let res = await fetch(`${SCRIPT_URL}?action=test_scan`, { method: 'GET', redirect: 'follow' });
+                let json = await res.json();
+                btn.innerHTML = originalText;
+                alert(json.message || "Đã gửi test!");
+                fetchData(true);
+            } catch (err) {
+                alert("Lỗi gửi test scan: " + err);
+            }
+        }
+
+        // Khởi động
+        checkConfigState();
+        updateSheetLink(SHEET_URL);
+        fetchData();
+
+        // Tự động làm mới mỗi 3 giây
+        setInterval(() => {
+            fetchData();
+        }, 3000);
+    </script>
+</body>
+</html>

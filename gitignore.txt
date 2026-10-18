@@ -1,0 +1,20 @@
+# Excel files
+*.xlsx
+*.xls
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.spec
+dist/
+build/
+
+# Environment & credentials
+.env
+credentials.json
+token.json
+
+# IDEs
+.vscode/
+.idea/
